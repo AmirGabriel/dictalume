@@ -1,0 +1,84 @@
+{
+  "name": "dictalume",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "A bring-your-own-API voice-to-text desktop app.",
+  "main": "out/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "privacy:check": "node scripts/privacy-check.mjs",
+    "package": "pnpm build && electron-builder --mac --dir",
+    "dist": "pnpm build && electron-builder --mac"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "simple-icons": "^14.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2",
+    "@types/ws": "^8.18.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^3.0.5",
+    "ws": "^8.21.1"
+  },
+  "build": {
+    "appId": "com.dictalume.app",
+    "productName": "Dictalume",
+    "protocols": [
+      {
+        "name": "Dictalume automation",
+        "schemes": [
+          "dictalume"
+        ]
+      }
+    ],
+    "asar": true,
+    "files": [
+      "out/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Dictalume records your voice only when you trigger dictation.",
+        "NSScreenCaptureUsageDescription": "Dictalume captures meeting audio from a window or screen you explicitly choose. Video is never recorded.",
+        "NSAppleEventsUsageDescription": "Dictalume pastes transcribed text into the application you are using."
+      }
+    },
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

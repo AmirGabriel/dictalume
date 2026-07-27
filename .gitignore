@@ -1,0 +1,62 @@
+# Dependencies and generated application output
+node_modules/
+out/
+dist/
+release/
+coverage/
+*.tsbuildinfo
+*.asar
+*.blockmap
+*.dmg
+*.exe
+*.zip
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.cer
+*.crt
+*.mobileprovision
+*.provisionprofile
+*.keystore
+
+# Dictalume runtime data
+settings.json
+history.json
+meetings.json
+calendar.json
+sync.json
+context.json
+
+# macOS and Windows metadata
+.DS_Store
+.AppleDouble
+Thumbs.db
+Desktop.ini
+
+# Xcode user and signing state
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Editors and local tooling
+.idea/
+.vscode/
+.impeccable/live/
+*.swp
+*.swo
+*~
+
+# Logs and package-manager diagnostics
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -2,12 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from './App'
 import { RecorderOverlay } from './RecorderOverlay'
+import { MeetingIndicator } from './MeetingIndicator'
 import './styles.css'
 
 const params = new URLSearchParams(window.location.search)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {params.has('overlay') ? <RecorderOverlay /> : <App />}
+    {params.has('overlay')
+      ? <RecorderOverlay />
+      : params.has('meetingIndicator')
+        ? <MeetingIndicator />
+        : <App />}
   </React.StrictMode>
 )

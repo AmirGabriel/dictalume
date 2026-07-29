@@ -1,17 +1,25 @@
 export interface ParsedMeetingNotes {
   summary: string[]
+  keyPoints: string[]
+  decisions: string[]
   todos: string[]
+  openQuestions: string[]
 }
 
-type MeetingSection = 'summary' | 'todos'
+type MeetingSection = keyof ParsedMeetingNotes
 
 function sectionForHeading(heading: string): MeetingSection | null {
   const normalized = heading
     .toLocaleLowerCase()
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
-  if (/summary|resumo|sintese|decision|key detail/.test(normalized)) return 'summary'
+  if (/summary|resumo|sintese/.test(normalized)) return 'summary'
+  if (/key point|ponto.?chave|destaque|important context/.test(normalized)) return 'keyPoints'
+  if (/decision|decisao|decisoes/.test(normalized)) return 'decisions'
   if (/to.?do|todo|action item|pendencia|proximo passo|acao/.test(normalized)) return 'todos'
+  if (/open question|unresolved|questao em aberto|pergunta em aberto/.test(normalized)) {
+    return 'openQuestions'
+  }
   return null
 }
 
@@ -24,7 +32,13 @@ function cleanListItem(line: string): string {
 }
 
 export function parseMeetingNotes(markdown: string): ParsedMeetingNotes {
-  const result: ParsedMeetingNotes = { summary: [], todos: [] }
+  const result: ParsedMeetingNotes = {
+    summary: [],
+    keyPoints: [],
+    decisions: [],
+    todos: [],
+    openQuestions: []
+  }
   let section: MeetingSection = 'summary'
 
   for (const rawLine of markdown.split(/\r?\n/)) {

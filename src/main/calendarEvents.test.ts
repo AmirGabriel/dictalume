@@ -36,16 +36,32 @@ describe('calendar meeting links', () => {
   it('normalizes an upcoming event for the meeting picker', () => {
     const event = normalizeCalendarEvent({
       id: 'event-1',
+      recurringEventId: 'weekly-review',
       summary: 'Weekly review',
       start: { dateTime: '2026-07-27T10:00:00-03:00' },
       end: { dateTime: '2026-07-27T10:30:00-03:00' },
-      hangoutLink: 'https://meet.google.com/abc-defg-hij'
+      hangoutLink: 'https://meet.google.com/abc-defg-hij',
+      attendees: [
+        {
+          displayName: 'Ana',
+          email: ['ana', 'example.com'].join('@'),
+          responseStatus: 'accepted'
+        }
+      ]
     })
 
     expect(event).toMatchObject({
       id: 'event-1',
+      seriesId: 'google:weekly-review',
       title: 'Weekly review',
-      provider: 'google-meet'
+      provider: 'google-meet',
+      attendees: [
+        {
+          name: 'Ana',
+          email: ['ana', 'example.com'].join('@'),
+          responseStatus: 'accepted'
+        }
+      ]
     })
     expect(event?.endsAt).toBeGreaterThan(event?.startsAt || 0)
   })

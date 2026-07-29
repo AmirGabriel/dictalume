@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @EnvironmentObject private var model: AppModel
     @State private var apiKey = ""
+    @State private var meetingDeepgramKey = ""
     @State private var showingContextPicker = false
     @State private var contextMessage = ""
 
@@ -42,6 +43,22 @@ struct SettingsView: View {
             }
 
             Section {
+                SecureField("Deepgram API key", text: $meetingDeepgramKey)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                Label(
+                    "Speaker labels come from acoustic diarization, not from AI guesses.",
+                    systemImage: "person.2.wave.2"
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            } header: {
+                Text("In-person meetings")
+            } footer: {
+                Text("Used only when Meeting is selected. Speaker 1, 2, and 3 remain anonymous until you confirm or rename them.")
+            }
+
+            Section {
                 Button {
                     showingContextPicker = true
                 } label: {
@@ -68,8 +85,21 @@ struct SettingsView: View {
             }
 
             Section {
+                NavigationLink {
+                    ShortcutSetupView()
+                } label: {
+                    Label("Set up Action Button", systemImage: "button.programmable")
+                }
+            } header: {
+                Text("Instant recording")
+            } footer: {
+                Text("The Dictalume actions are already installed in Shortcuts; no manual shortcut building is required.")
+            }
+
+            Section {
                 Button("Save settings") {
                     KeychainStore.set(apiKey, account: "provider.\(model.settings.provider.rawValue)")
+                    KeychainStore.set(meetingDeepgramKey, account: "meeting.deepgram")
                     model.saveSettings()
                 }
                 .frame(maxWidth: .infinity)
@@ -79,6 +109,7 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
             apiKey = KeychainStore.get(account: "provider.\(model.settings.provider.rawValue)")
+            meetingDeepgramKey = KeychainStore.get(account: "meeting.deepgram")
         }
         .onChange(of: model.settings.provider) { _, provider in
             apiKey = KeychainStore.get(account: "provider.\(provider.rawValue)")
@@ -110,7 +141,7 @@ struct SettingsView: View {
         case .grok:
             model.settings.baseURL = "https://api.x.ai/v1"
             model.settings.transcriptionModel = "stt"
-            model.settings.cleanupModel = "grok-3-mini"
+            model.settings.cleanupModel = "grok-4.3"
         case .groq:
             model.settings.baseURL = "https://api.groq.com/openai/v1"
             model.settings.transcriptionModel = "whisper-large-v3-turbo"

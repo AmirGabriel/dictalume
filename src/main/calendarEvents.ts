@@ -2,6 +2,7 @@ import type { CalendarEvent } from '../shared/types'
 
 export interface GoogleCalendarEvent {
   id?: string
+  recurringEventId?: string
   summary?: string
   description?: string
   location?: string
@@ -11,6 +12,12 @@ export interface GoogleCalendarEvent {
   conferenceData?: {
     entryPoints?: Array<{ entryPointType?: string; uri?: string }>
   }
+  attendees?: Array<{
+    displayName?: string
+    email?: string
+    responseStatus?: 'accepted' | 'declined' | 'tentative' | 'needsAction'
+    resource?: boolean
+  }>
 }
 
 export function extractMeetingUrl(event: GoogleCalendarEvent): string {
@@ -37,10 +44,20 @@ export function normalizeCalendarEvent(event: GoogleCalendarEvent): CalendarEven
   const joinUrl = extractMeetingUrl(event)
   return {
     id: event.id,
+    ...(event.recurringEventId ? { seriesId: `google:${event.recurringEventId}` } : {}),
     title: event.summary || 'Untitled event',
     startsAt,
     endsAt,
     joinUrl,
+    attendees: (event.attendees || [])
+      .filter((attendee) => !attendee.resource && (attendee.displayName || attendee.email))
+      .map((attendee) => ({
+        name: attendee.displayName || attendee.email || 'Unknown attendee',
+        ...(attendee.email ? { email: attendee.email } : {}),
+        ...(attendee.responseStatus
+          ? { responseStatus: attendee.responseStatus }
+          : {})
+      })),
     provider: joinUrl.includes('meet.google.com')
       ? 'google-meet'
       : /zoom(?:gov)?\.com|zoom\.us/i.test(joinUrl)

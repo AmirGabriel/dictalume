@@ -1,0 +1,129 @@
+name: Desktop builds and releases
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify release version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          node -e "const p=require('./package.json'); if ('v'+p.version !== process.env.GITHUB_REF_NAME) throw new Error('Tag '+process.env.GITHUB_REF_NAME+' must match package version v'+p.version)"
+
+      - name: Check repository privacy
+        run: pnpm privacy:check
+
+      - name: Typecheck and test
+        run: pnpm typecheck && pnpm test
+
+      - name: Build installer and portable app
+        run: pnpm dist:win
+
+      - name: Upload Windows downloads
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dictalume-Windows
+          path: |
+            dist/*Windows-Setup.exe
+            dist/*Windows-Setup.exe.blockmap
+            dist/*Windows-Portable.exe
+            dist/latest.yml
+          if-no-files-found: error
+
+  mac:
+    runs-on: macos-14
+    timeout-minutes: 35
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify release version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          node -e "const p=require('./package.json'); if ('v'+p.version !== process.env.GITHUB_REF_NAME) throw new Error('Tag '+process.env.GITHUB_REF_NAME+' must match package version v'+p.version)"
+
+      - name: Check repository privacy
+        run: pnpm privacy:check
+
+      - name: Typecheck and test
+        run: pnpm typecheck && pnpm test
+
+      - name: Build universal Mac downloads
+        run: pnpm dist:mac
+
+      - name: Upload Mac downloads
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dictalume-Mac
+          path: |
+            dist/*.dmg
+            dist/*.dmg.blockmap
+            dist/*.zip
+            dist/*.zip.blockmap
+            dist/latest-mac.yml
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download desktop builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: Dictalume-*
+          path: release
+          merge-multiple: true
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" release/* --clobber --repo "${GITHUB_REPOSITORY}"
+          else
+            gh release create "${GITHUB_REF_NAME}" release/* --generate-notes --repo "${GITHUB_REPOSITORY}"
+          fi

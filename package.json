@@ -1,9 +1,13 @@
 {
   "name": "dictalume",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "private": true,
   "license": "UNLICENSED",
   "description": "A bring-your-own-API voice-to-text desktop app.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AmirGabriel/dictalume.git"
+  },
   "main": "out/main/index.js",
   "type": "module",
   "scripts": {
@@ -15,9 +19,12 @@
     "typecheck": "tsc --noEmit",
     "privacy:check": "node scripts/privacy-check.mjs",
     "package": "pnpm build && electron-builder --mac --dir",
-    "dist": "pnpm build && electron-builder --mac"
+    "dist": "pnpm build && electron-builder --mac",
+    "dist:mac": "pnpm build && electron-builder --mac --universal",
+    "dist:win": "pnpm build && electron-builder --win nsis portable"
   },
   "dependencies": {
+    "electron-updater": "^6.8.9",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -50,11 +57,24 @@
     ],
     "asar": true,
     "files": [
-      "out/**/*"
+      "out/**/*",
+      "extension/**/*"
+    ],
+    "asarUnpack": [
+      "extension/**/*"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "AmirGabriel",
+        "repo": "dictalume",
+        "releaseType": "release"
+      }
     ],
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "build/icon.png",
+      "artifactName": "Dictalume-${version}-${arch}.${ext}",
       "target": [
         "dmg",
         "zip"
@@ -74,7 +94,14 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Dictalume-${version}-Windows-Setup.${ext}",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "Dictalume-${version}-Windows-Portable.${ext}"
     }
   },
   "engines": {

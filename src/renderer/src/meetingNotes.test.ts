@@ -18,10 +18,13 @@ describe('meeting notes', () => {
         'The launch remains scheduled for Friday.',
         'Design approved the final flow.'
       ],
+      keyPoints: [],
+      decisions: [],
       todos: [
         'Ana — publish the release notes by Thursday.',
         'Bruno — confirm the analytics event.'
-      ]
+      ],
+      openQuestions: []
     })
   })
 
@@ -30,7 +33,24 @@ describe('meeting notes', () => {
       parseMeetingNotes('## Resumo\n- Escopo aprovado.\n\n## Pendências\n- [ ] Enviar proposta.')
     ).toEqual({
       summary: ['Escopo aprovado.'],
-      todos: ['Enviar proposta.']
+      keyPoints: [],
+      decisions: [],
+      todos: ['Enviar proposta.'],
+      openQuestions: []
+    })
+  })
+
+  it('keeps decisions and open questions in their own sections', () => {
+    expect(
+      parseMeetingNotes(
+        '## Summary\n- Reviewed launch.\n\n## Decisions\n- Ship Friday.\n\n## Open questions\n- Who owns support?'
+      )
+    ).toEqual({
+      summary: ['Reviewed launch.'],
+      keyPoints: [],
+      decisions: ['Ship Friday.'],
+      todos: [],
+      openQuestions: ['Who owns support?']
     })
   })
 

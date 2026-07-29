@@ -1,4 +1,4 @@
-import { access, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -136,11 +136,59 @@ describe('cross-device context sync', () => {
         durationMs: 3_600_000,
         transcript: 'Full transcript',
         notes: 'Decisions and actions',
-        provider: 'openai'
+        provider: 'openai',
+        noteEvidence: [{ noteText: 'Decision made.', turnIds: ['turn-1'] }]
       }
     ]
 
-    expect(mergeSharedContexts(windows, mac).meetings[0]?.id).toBe('meeting-1')
+    expect(mergeSharedContexts(windows, mac).meetings[0]).toMatchObject({
+      id: 'meeting-1',
+      noteEvidence: [{ noteText: 'Decision made.', turnIds: ['turn-1'] }]
+    })
+  })
+
+  it('keeps the newest meeting update so trash and speaker edits sync', () => {
+    const mac = context('mac', 200, '', 'mac-history')
+    const windows = context('windows', 100, '', 'windows-history')
+    const base: MeetingRecord = {
+      id: 'meeting-1',
+      title: 'Product weekly',
+      source: 'google-meet',
+      createdAt: 100,
+      updatedAt: 150,
+      durationMs: 1_000,
+      transcript: 'Transcript',
+      notes: 'Notes',
+      provider: 'openai'
+    }
+    windows.meetings = [base]
+    mac.meetings = [{ ...base, updatedAt: 250, deletedAt: 240 }]
+
+    expect(mergeSharedContexts(windows, mac).meetings[0]).toMatchObject({
+      updatedAt: 250,
+      deletedAt: 240
+    })
+  })
+
+  it('merges API cost events once by request ID across computers', () => {
+    const mac = context('mac', 200, '', 'mac-history')
+    const windows = context('windows', 100, '', 'windows-history')
+    const sharedEvent = {
+      id: 'request-1',
+      createdAt: 200,
+      provider: 'grok' as const,
+      model: 'grok-4.5',
+      operation: 'meeting-chat' as const,
+      costUsd: 0.001,
+      exact: true,
+      detail: 'Exact amount returned by the provider.'
+    }
+    mac.usage = [sharedEvent]
+    windows.usage = [sharedEvent, { ...sharedEvent, id: 'request-2', costUsd: 0.002 }]
+
+    const merged = mergeSharedContexts(mac, windows)
+    expect(merged.usage?.map((event) => event.id)).toEqual(['request-1', 'request-2'])
+    expect(merged.usage?.reduce((sum, event) => sum + (event.costUsd || 0), 0)).toBe(0.003)
   })
 
   it('uses the latest scalar preferences while preserving unique modes', () => {
@@ -198,6 +246,92 @@ describe('cross-device context sync', () => {
     expect(macStore.history.map((item) => item.id).sort()).toEqual([
       'mac',
       'windows'
+    ])
+  })
+
+  it('heals an overwritten aggregate context from private per-device replicas', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dictalume-replica-sync-'))
+    temporaryDirectories.push(root)
+    const macPreferences = join(root, 'mac-preferences.json')
+    const windowsPreferences = join(root, 'windows-preferences.json')
+    await writeFile(
+      macPreferences,
+      JSON.stringify({
+        enabled: false,
+        folderPath: '',
+        deviceId: 'mac-device',
+        lastSyncedAt: 0,
+        lastRevision: ''
+      })
+    )
+    await writeFile(
+      windowsPreferences,
+      JSON.stringify({
+        enabled: false,
+        folderPath: '',
+        deviceId: 'windows-device',
+        lastSyncedAt: 0,
+        lastRevision: ''
+      })
+    )
+    const macStore = new MemoryStore(
+      structuredClone(defaultSettings),
+      context('mac', 200, '', 'mac-history').history
+    )
+    const windowsStore = new MemoryStore(
+      structuredClone(defaultSettings),
+      context('windows', 100, '', 'windows-history').history
+    )
+    const macSync = new SyncManager(
+      macStore,
+      () => undefined,
+      () => undefined,
+      macPreferences
+    )
+    const windowsSync = new SyncManager(
+      windowsStore,
+      () => undefined,
+      () => undefined,
+      windowsPreferences
+    )
+    await macSync.start()
+    await macSync.setFolder(root)
+    await windowsSync.start()
+    await windowsSync.setFolder(root)
+    macSync.stop()
+    windowsSync.stop()
+
+    const macReplica = await readFile(
+      join(root, 'Dictalume', 'devices', 'mac-device.json'),
+      'utf8'
+    )
+    await writeFile(join(root, 'Dictalume', 'context.json'), macReplica)
+
+    const recoveryPreferences = join(root, 'recovery-preferences.json')
+    await writeFile(
+      recoveryPreferences,
+      JSON.stringify({
+        enabled: false,
+        folderPath: '',
+        deviceId: 'recovery-device',
+        lastSyncedAt: 0,
+        lastRevision: ''
+      })
+    )
+    const recoveryStore = new MemoryStore(structuredClone(defaultSettings), [])
+    const recovery = new SyncManager(
+      recoveryStore,
+      () => undefined,
+      () => undefined,
+      recoveryPreferences
+    )
+    await recovery.start()
+    await recovery.setFolder(root)
+    recovery.stop()
+
+    expect(recoveryStore.history.map((item) => item.id).sort()).toEqual([
+      'mac-history',
+      'windows-history'
     ])
   })
 

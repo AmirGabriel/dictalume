@@ -43,10 +43,18 @@ export interface AppSettings {
   cleanupProvider: 'same' | Exclude<ProviderId, 'deepgram'>
   automaticMemory: boolean
   vocabulary: string
+  meetingTemplates: MeetingTemplate[]
+  meetingRecipes: MeetingRecipe[]
+  meetingSpaces: MeetingSpace[]
+  meetingConsentMessageEnabled: boolean
+  meetingConsentMessage: string
+  meetingTranscriptionProvider: 'same' | ProviderId
+  meetingTranscriptRetentionDays: 0 | 7 | 30 | 90
 }
 
 export interface HistoryItem {
   id: string
+  title?: string
   text: string
   rawText: string
   createdAt: number
@@ -99,9 +107,58 @@ export interface SyncStatus {
 }
 
 export interface MeetingAudioSegment {
+  id: string
   audio: Uint8Array
   mimeType: string
   durationMs: number
+  source: 'microphone' | 'system'
+  startedAtMs: number
+}
+
+export interface MeetingTranscriptChunk {
+  text: string
+  startMs: number
+  endMs: number
+  diarizationLabel?: string
+}
+
+export interface MeetingSegmentTranscription {
+  segmentId: string
+  source: MeetingAudioSegment['source']
+  startedAtMs: number
+  durationMs: number
+  chunks: MeetingTranscriptChunk[]
+  learnedVocabulary: string[]
+}
+
+export interface MeetingLiveTranscriptionRequest {
+  segment: MeetingAudioSegment
+  meetingSource: MeetingRequest['source']
+}
+
+export type MeetingTemplateId = string
+
+export interface MeetingTemplate {
+  id: MeetingTemplateId
+  name: string
+  guidance: string
+  builtIn?: boolean
+}
+
+export interface MeetingRecipe {
+  id: string
+  name: string
+  prompt: string
+  builtIn?: boolean
+}
+
+export interface MeetingSpace {
+  id: string
+  name: string
+  description: string
+  icon: string
+  parentId?: string
+  autoAddTitles: string[]
 }
 
 export interface MeetingRequest {
@@ -110,6 +167,45 @@ export interface MeetingRequest {
   segments: MeetingAudioSegment[]
   durationMs: number
   startedAt: number
+  userNotes: string
+  attachments?: MeetingAttachment[]
+  templateId: MeetingTemplateId
+  transcriptions?: MeetingSegmentTranscription[]
+  speakerNames?: Record<string, string>
+  attendees?: CalendarAttendee[]
+  calendarSeriesId?: string
+  appendToMeetingId?: string
+}
+
+export interface MeetingSpeaker {
+  id: string
+  name: string
+  source: MeetingAudioSegment['source']
+  evidenceKey?: string
+  diarizationLabel?: string
+  diarizationScope?: string
+}
+
+export interface MeetingTranscriptTurn {
+  id: string
+  speakerId: string
+  source: MeetingAudioSegment['source']
+  startMs: number
+  endMs: number
+  text: string
+}
+
+export interface MeetingNoteEvidence {
+  noteText: string
+  turnIds: string[]
+}
+
+export interface MeetingAttachment {
+  id: string
+  name: string
+  mimeType: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'
+  dataUrl: string
+  createdAt: number
 }
 
 export interface MeetingRecord {
@@ -121,12 +217,148 @@ export interface MeetingRecord {
   transcript: string
   notes: string
   provider: ProviderId
+  speakers?: MeetingSpeaker[]
+  transcriptTurns?: MeetingTranscriptTurn[]
+  userNotes?: string
+  attachments?: MeetingAttachment[]
+  templateId?: MeetingTemplateId
+  updatedAt?: number
+  spaceIds?: string[]
+  /** Legacy flat-space label retained for migration from versions before 0.5. */
+  space?: string
+  calendarSeriesId?: string
+  deletedAt?: number
+  transcriptDeletedAt?: number
+  transcriptUpdatedAt?: number
+  completedTodos?: string[]
+  attendees?: CalendarAttendee[]
+  chat?: MeetingChatMessage[]
+  noteEvidence?: MeetingNoteEvidence[]
+}
+
+export interface MeetingUpdateRequest {
+  meetingId: string
+  title?: string
+  speakers?: MeetingSpeaker[]
+  transcriptTurns?: MeetingTranscriptTurn[]
+  notes?: string
+  userNotes?: string
+  attachments?: MeetingAttachment[]
+  completedTodos?: string[]
+  templateId?: MeetingTemplateId
+  spaceIds?: string[]
+  space?: string
+  regenerateNotes?: boolean
+}
+
+export interface MeetingExportRequest {
+  meetingId: string
+  format: 'markdown' | 'json'
+}
+
+export interface MeetingChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  createdAt: number
+  provider?: Exclude<ProviderId, 'deepgram'>
+}
+
+export interface MeetingChatRequest {
+  meetingId: string
+  question: string
+  provider: Exclude<ProviderId, 'deepgram'>
+}
+
+export interface MeetingLibraryChatRequest {
+  question: string
+  provider: Exclude<ProviderId, 'deepgram'>
+}
+
+export interface MeetingLibraryChatAnswer {
+  answer: string
+  meetingIds: string[]
+  meetingTitles: string[]
+}
+
+export interface ApiUsageEvent {
+  id: string
+  createdAt: number
+  provider: ProviderId
+  model: string
+  operation: 'transcription' | 'cleanup' | 'meeting-notes' | 'meeting-chat'
+  costUsd: number | null
+  exact: boolean
+  inputTokens?: number
+  cachedInputTokens?: number
+  outputTokens?: number
+  audioSeconds?: number
+  detail: string
+}
+
+export interface ApiUsageSummary {
+  totalUsd: number
+  monthUsd: number
+  exactUsd: number
+  estimatedUsd: number
+  unpricedRequests: number
+  events: ApiUsageEvent[]
+}
+
+export type DesktopPlatform = 'mac' | 'windows' | 'linux'
+
+export type UpdateState =
+  | 'idle'
+  | 'checking'
+  | 'current'
+  | 'available'
+  | 'downloading'
+  | 'ready'
+  | 'error'
+  | 'manual'
+
+export interface UpdateStatus {
+  state: UpdateState
+  currentVersion: string
+  availableVersion: string
+  progress: number
+  message: string
+  canAutoInstall: boolean
+  releaseUrl: string
 }
 
 export interface MeetingCaptureSupport {
   platform: 'mac' | 'windows' | 'other'
   systemAudio: 'supported' | 'system-picker' | 'unavailable'
   detail: string
+}
+
+export interface MeetingIndicatorState {
+  status: 'hidden' | 'recording' | 'paused' | 'reviewing' | 'processing'
+  title: string
+  elapsedMs: number
+  systemAudio: boolean
+  meetingSource?: MeetingRequest['source']
+}
+
+export type MeetingIndicatorAction = 'pause' | 'resume' | 'stop'
+
+export interface SpeakerTagEvent {
+  name: string
+  capturedAt: number
+  meetingUrl: string
+  source: 'google-meet' | 'zoom'
+}
+
+export interface SpeakerTagStatus {
+  connected: boolean
+  clients: number
+  port: number
+  lastSpeaker: string
+  lastSeenAt: number
+  lastSource: SpeakerTagEvent['source'] | ''
+  zoomSupported: boolean
+  error: string
 }
 
 export interface CalendarEvent {
@@ -136,6 +368,26 @@ export interface CalendarEvent {
   endsAt: number
   joinUrl: string
   provider: 'google-meet' | 'zoom' | 'other'
+  seriesId?: string
+  attendees?: CalendarAttendee[]
+}
+
+export interface CalendarAttendee {
+  name: string
+  email?: string
+  responseStatus?: 'accepted' | 'declined' | 'tentative' | 'needsAction'
+}
+
+export interface PreMeetingBriefRequest {
+  event: CalendarEvent
+  provider: Exclude<ProviderId, 'deepgram'>
+}
+
+export interface PreMeetingBrief {
+  eventId: string
+  content: string
+  meetingIds: string[]
+  meetingTitles: string[]
 }
 
 export interface CalendarStatus {
@@ -165,19 +417,52 @@ export interface DesktopAPI {
   chooseSyncFolder(): Promise<SyncStatus>
   syncNow(): Promise<SyncStatus>
   disableSync(): Promise<SyncStatus>
-  getMeetings(): Promise<MeetingRecord[]>
+  getMeetings(includeDeleted?: boolean): Promise<MeetingRecord[]>
   saveMeeting(request: MeetingRequest): Promise<MeetingRecord>
+  transcribeMeetingSegment(
+    request: MeetingLiveTranscriptionRequest
+  ): Promise<MeetingSegmentTranscription>
+  updateMeeting(request: MeetingUpdateRequest): Promise<MeetingRecord>
+  askMeeting(request: MeetingChatRequest): Promise<MeetingRecord>
+  askMeetings(request: MeetingLibraryChatRequest): Promise<MeetingLibraryChatAnswer>
   deleteMeeting(id: string): Promise<void>
+  restoreMeeting(id: string): Promise<MeetingRecord>
+  permanentlyDeleteMeeting(id: string): Promise<void>
+  exportMeeting(request: MeetingExportRequest): Promise<boolean>
+  exportMeetingsCsv(): Promise<boolean>
   getMeetingCaptureSupport(): Promise<MeetingCaptureSupport>
+  getMeetingIndicatorState(): Promise<MeetingIndicatorState>
+  updateMeetingIndicator(state: MeetingIndicatorState): Promise<void>
+  controlMeeting(action: MeetingIndicatorAction): Promise<void>
+  getSpeakerTagStatus(): Promise<SpeakerTagStatus>
+  getSpeakerTagEvents(startedAt: number, endedAt: number): Promise<SpeakerTagEvent[]>
+  openSpeakerTagExtensionFolder(): Promise<void>
+  getPlatform(): Promise<DesktopPlatform>
+  getApiUsage(): Promise<ApiUsageSummary>
+  getUpdateStatus(): Promise<UpdateStatus>
+  checkForUpdates(): Promise<UpdateStatus>
+  downloadUpdate(): Promise<UpdateStatus>
+  installUpdate(): Promise<void>
+  openUpdateDownload(): Promise<void>
   getCalendarStatus(): Promise<CalendarStatus>
   connectGoogleCalendar(clientId: string): Promise<CalendarStatus>
   disconnectGoogleCalendar(): Promise<CalendarStatus>
   getCalendarEvents(): Promise<CalendarEvent[]>
+  getOutlookCalendarStatus(): Promise<CalendarStatus>
+  connectOutlookCalendar(clientId: string): Promise<CalendarStatus>
+  disconnectOutlookCalendar(): Promise<CalendarStatus>
+  getOutlookCalendarEvents(): Promise<CalendarEvent[]>
+  createPreMeetingBrief(request: PreMeetingBriefRequest): Promise<PreMeetingBrief>
   openExternal(url: string): Promise<void>
   onRecordingToggle(callback: (languageOverride?: string) => void): () => void
   onRecordingCancel(callback: () => void): () => void
   onSettingsChanged(callback: (settings: AppSettings) => void): () => void
   onHistoryChanged(callback: () => void): () => void
   onMeetingsChanged(callback: () => void): () => void
+  onMeetingIndicatorState(callback: (state: MeetingIndicatorState) => void): () => void
+  onMeetingControl(callback: (action: MeetingIndicatorAction) => void): () => void
+  onCalendarEventSelected(callback: (event: CalendarEvent) => void): () => void
+  onApiUsageChanged(callback: (summary: ApiUsageSummary) => void): () => void
+  onUpdateStatus(callback: (status: UpdateStatus) => void): () => void
   onSyncStatus(callback: (status: SyncStatus) => void): () => void
 }

@@ -7,40 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D80E6998C27F35112EBBA63 /* DictalumeKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A4A8D9B1E569F96E6D10403E /* DictalumeKeyboard.appex */; };
-		2620BE1816DA6F4A45FD82AB /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B25A56DFFAB692F0B826D9F /* TranscriptionService.swift */; };
-		2AB672E46A0D484BD8ED01DE /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB02B43F4FA6B231C6243A1 /* AppModel.swift */; };
-		426B9333F655CC8AF7311702 /* RecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A3EEAD42A3230EF2602AA5 /* RecorderView.swift */; };
-		526D9C3D1C00DB528CBE163E /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31E44585FD9E850A0F3B8DE /* KeyboardViewController.swift */; };
-		5F43C2FB17ED5C676AB752D7 /* SharedContextStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23B7E949E6DC816111429F5 /* SharedContextStore.swift */; };
-		79809D5450DA1EF55DBDA583 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A72433BCC9F93098793B8DE8 /* AudioRecorder.swift */; };
-		89596D86C11BE546219C62A2 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E93C5BDFBE07A613D1273 /* HistoryView.swift */; };
-		ADD7102E6D98D1F547DCC7A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DFFC3EBB24C3FFBA262A5A /* Foundation.framework */; };
-		B671E3A21BD97CF354C43537 /* DictalumeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B064F6D1C4A9A73544E5416 /* DictalumeApp.swift */; };
-		C9A4A3193C3B1283B96953F1 /* SpellingMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC6BFA53E6DF16C22F7EA37 /* SpellingMemory.swift */; };
-		E90F355B72A0942C78804857 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0CA7FA9698564C6E9013A0 /* SettingsView.swift */; };
-		FA945A4F080D8F324BEC5891 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0C53F52B3CC04FD4F46A8 /* KeychainStore.swift */; };
-		FFCFCED2891C1D6859097935 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DFFC3EBB24C3FFBA262A5A /* Foundation.framework */; };
+		0F1242FDA6F546465F499FC5 /* RecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD114FBCF2AEF15CBC19F73F /* RecorderView.swift */; };
+		1637A93AE255E074A3654767 /* MeetingChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB05DCC2CADE38DADC3B39BD /* MeetingChatView.swift */; };
+		1803353CD38DE3B631BB7C82 /* AutomaticTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6976E9AD5691A2330D3A9320 /* AutomaticTitle.swift */; };
+		34886AC6D3F0E486777115B2 /* DictalumeKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CEAC4AF3BD818FAD45258A70 /* DictalumeKeyboard.appex */; };
+		390D19EBFC859DE181187708 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA7094A6C5412F6D5EC2740 /* Foundation.framework */; };
+		3AB1362F7A88340DE91A5DC3 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF0B0CBC7A3157777BCEEF2 /* HistoryView.swift */; };
+		44DBE80E129DA7A44A615F25 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA7094A6C5412F6D5EC2740 /* Foundation.framework */; };
+		4640F1D5A8737CC488201CB4 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C434AC00FE3EE3B889631 /* KeyboardViewController.swift */; };
+		4B21D21130B06DC6608D5CD2 /* SpellingMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3382E6C8B97675A64266C0C1 /* SpellingMemory.swift */; };
+		5EDDC30F9DE10F3806FFF310 /* DictalumeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3347452FA692E0CA1BE13A5A /* DictalumeApp.swift */; };
+		657F3C165C130801B49CA005 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4A3AC5E3AC8D4C3FF42C35 /* AudioRecorder.swift */; };
+		6D1908613EE130DBFC1532EC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA90D0FABB9ABDB35ED0C3AF /* SettingsView.swift */; };
+		7F568D88F3D681AF32397BA6 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED195AA2263C758A2D0E408 /* AppModel.swift */; };
+		9A0BA85208D7F32C1060AE1F /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36088BF4918E05860B4E036 /* TranscriptionService.swift */; };
+		9B55BA1C76FED1430E5E961F /* UpcomingMeetingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB73549BB0A809B25AD1E43 /* UpcomingMeetingsView.swift */; };
+		9D25F2137305EED2D9B666FD /* UpcomingMeetings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE97D4376800F0D9B7C9451 /* UpcomingMeetings.swift */; };
+		A413E7D79F916F1D3772C588 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C5F816325B8E54AEC1251B /* KeychainStore.swift */; };
+		C80E1AA956B57D4D588FCDD4 /* SharedContextStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9D5AFA3BCD868471150B66 /* SharedContextStore.swift */; };
+		CB9D716EF149B315FCF24406 /* RecordingShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8697342942A7C2AF51B417A /* RecordingShortcuts.swift */; };
+		ED7D7C6E3DC66608AA5BA0CE /* ShortcutSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDDCFBF2012155014C96018 /* ShortcutSetupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6426513A691ADE786BC21FA0 /* PBXContainerItemProxy */ = {
+		8E3CD3A86F68D6CF53F1938B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 099EE392D217F63A351C810D /* Project object */;
+			containerPortal = A8CB49D88680F4F77C9B957A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 85E8EDC7731A42B00248A8AD;
+			remoteGlobalIDString = 3D4EF1C64C0D45D83359328B;
 			remoteInfo = DictalumeKeyboard;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2AF477DDC67E4ECB8AE84503 /* Embed App Extensions */ = {
+		DEFB2A3C44BB868BFC0E2CC4 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1D80E6998C27F35112EBBA63 /* DictalumeKeyboard.appex in Embed App Extensions */,
+				34886AC6D3F0E486777115B2 /* DictalumeKeyboard.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,141 +54,134 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B25A56DFFAB692F0B826D9F /* TranscriptionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
-		13DFFC3EBB24C3FFBA262A5A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		1B0CA7FA9698564C6E9013A0 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		3229449116DDD6A9EF1DC8D6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		440E93C5BDFBE07A613D1273 /* HistoryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		7EC6BFA53E6DF16C22F7EA37 /* SpellingMemory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellingMemory.swift; sourceTree = "<group>"; };
-		84E0C53F52B3CC04FD4F46A8 /* KeychainStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
-		8B064F6D1C4A9A73544E5416 /* DictalumeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DictalumeApp.swift; sourceTree = "<group>"; };
-		9E45CFAFD38D523DD9432CA7 /* Dictalume.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Dictalume.entitlements; sourceTree = "<group>"; };
-		A23B7E949E6DC816111429F5 /* SharedContextStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedContextStore.swift; sourceTree = "<group>"; };
-		A31E44585FD9E850A0F3B8DE /* KeyboardViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
-		A4A8D9B1E569F96E6D10403E /* DictalumeKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DictalumeKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		A72433BCC9F93098793B8DE8 /* AudioRecorder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
-		B9BC540319267856EDA3F984 /* DictalumeKeyboard.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DictalumeKeyboard.entitlements; sourceTree = "<group>"; };
-		C44650454AAC59CAA2D0A2B7 /* Dictalume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictalume.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2CDFCB2C1EB1EE2262E5252 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E1A3EEAD42A3230EF2602AA5 /* RecorderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecorderView.swift; sourceTree = "<group>"; };
-		ECB02B43F4FA6B231C6243A1 /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		0B4A3AC5E3AC8D4C3FF42C35 /* AudioRecorder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		0BE97D4376800F0D9B7C9451 /* UpcomingMeetings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpcomingMeetings.swift; sourceTree = "<group>"; };
+		1F08DFD4F9202E06BA2EC80D /* DictalumeKeyboard.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = DictalumeKeyboard.entitlements; sourceTree = "<group>"; };
+		268C434AC00FE3EE3B889631 /* KeyboardViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		2A9D5AFA3BCD868471150B66 /* SharedContextStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedContextStore.swift; sourceTree = "<group>"; };
+		3347452FA692E0CA1BE13A5A /* DictalumeApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DictalumeApp.swift; sourceTree = "<group>"; };
+		3382E6C8B97675A64266C0C1 /* SpellingMemory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpellingMemory.swift; sourceTree = "<group>"; };
+		3ACA794230AD19EF3F2D8A08 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6976E9AD5691A2330D3A9320 /* AutomaticTitle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutomaticTitle.swift; sourceTree = "<group>"; };
+		6D11573FD7696BF1EE7F8ED5 /* Dictalume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictalume.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6ED195AA2263C758A2D0E408 /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		9DF0B0CBC7A3157777BCEEF2 /* HistoryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		AA90D0FABB9ABDB35ED0C3AF /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AD114FBCF2AEF15CBC19F73F /* RecorderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecorderView.swift; sourceTree = "<group>"; };
+		B1AB0B7DEE86BF47B8DEF2CE /* Dictalume.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Dictalume.entitlements; sourceTree = "<group>"; };
+		B7C5F816325B8E54AEC1251B /* KeychainStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		B8697342942A7C2AF51B417A /* RecordingShortcuts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RecordingShortcuts.swift; sourceTree = "<group>"; };
+		C97497D49A9A82F065911B7A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CB05DCC2CADE38DADC3B39BD /* MeetingChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeetingChatView.swift; sourceTree = "<group>"; };
+		CEA7094A6C5412F6D5EC2740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		CEAC4AF3BD818FAD45258A70 /* DictalumeKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DictalumeKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEB73549BB0A809B25AD1E43 /* UpcomingMeetingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpcomingMeetingsView.swift; sourceTree = "<group>"; };
+		D36088BF4918E05860B4E036 /* TranscriptionService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
+		EBDDCFBF2012155014C96018 /* ShortcutSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShortcutSetupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		163EE787745518AC23BBA473 /* Frameworks */ = {
+		89389A718B32E30818705BC6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ADD7102E6D98D1F547DCC7A1 /* Foundation.framework in Frameworks */,
+				390D19EBFC859DE181187708 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8154ACBABBB799CDBE93F904 /* Frameworks */ = {
+		C57349749F52299CA5C07D65 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFCFCED2891C1D6859097935 /* Foundation.framework in Frameworks */,
+				44DBE80E129DA7A44A615F25 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		62E2B693461628ECC5AE4E43 /* iOS */ = {
+		168B00C3E3674CF09EFAB4FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				13DFFC3EBB24C3FFBA262A5A /* Foundation.framework */,
+				EEA962F197A3A27DD18396BB /* iOS */,
 			);
-			name = iOS;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8AA96B359B1F233DEA892000 /* Products */ = {
+		2E9F096FC8B6C8CB16FA72A0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C44650454AAC59CAA2D0A2B7 /* Dictalume.app */,
-				A4A8D9B1E569F96E6D10403E /* DictalumeKeyboard.appex */,
+				6D11573FD7696BF1EE7F8ED5 /* Dictalume.app */,
+				CEAC4AF3BD818FAD45258A70 /* DictalumeKeyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8C0CFBC1F9B7C5D5786E405C = {
+		7A471FCAAEF0402F0A0B3168 /* DictalumeKeyboard */ = {
 			isa = PBXGroup;
 			children = (
-				8AA96B359B1F233DEA892000 /* Products */,
-				F6BC9EE69B833CAEAE71C407 /* Frameworks */,
-				986BFE82141AC6F29937F27B /* Dictalume */,
-				D50077D335B8FCC7D77491E1 /* DictalumeKeyboard */,
-			);
-			sourceTree = "<group>";
-		};
-		986BFE82141AC6F29937F27B /* Dictalume */ = {
-			isa = PBXGroup;
-			children = (
-				ECB02B43F4FA6B231C6243A1 /* AppModel.swift */,
-				A72433BCC9F93098793B8DE8 /* AudioRecorder.swift */,
-				440E93C5BDFBE07A613D1273 /* HistoryView.swift */,
-				84E0C53F52B3CC04FD4F46A8 /* KeychainStore.swift */,
-				E1A3EEAD42A3230EF2602AA5 /* RecorderView.swift */,
-				1B0CA7FA9698564C6E9013A0 /* SettingsView.swift */,
-				A23B7E949E6DC816111429F5 /* SharedContextStore.swift */,
-				7EC6BFA53E6DF16C22F7EA37 /* SpellingMemory.swift */,
-				0B25A56DFFAB692F0B826D9F /* TranscriptionService.swift */,
-				8B064F6D1C4A9A73544E5416 /* DictalumeApp.swift */,
-				D2CDFCB2C1EB1EE2262E5252 /* Info.plist */,
-				9E45CFAFD38D523DD9432CA7 /* Dictalume.entitlements */,
-			);
-			name = Dictalume;
-			path = Dictalume;
-			sourceTree = "<group>";
-		};
-		D50077D335B8FCC7D77491E1 /* DictalumeKeyboard */ = {
-			isa = PBXGroup;
-			children = (
-				A31E44585FD9E850A0F3B8DE /* KeyboardViewController.swift */,
-				3229449116DDD6A9EF1DC8D6 /* Info.plist */,
-				B9BC540319267856EDA3F984 /* DictalumeKeyboard.entitlements */,
+				268C434AC00FE3EE3B889631 /* KeyboardViewController.swift */,
+				C97497D49A9A82F065911B7A /* Info.plist */,
+				1F08DFD4F9202E06BA2EC80D /* DictalumeKeyboard.entitlements */,
 			);
 			name = DictalumeKeyboard;
 			path = DictalumeKeyboard;
 			sourceTree = "<group>";
 		};
-		F6BC9EE69B833CAEAE71C407 /* Frameworks */ = {
+		A08FCB55AA3ED73E6872A077 = {
 			isa = PBXGroup;
 			children = (
-				62E2B693461628ECC5AE4E43 /* iOS */,
+				2E9F096FC8B6C8CB16FA72A0 /* Products */,
+				168B00C3E3674CF09EFAB4FA /* Frameworks */,
+				FA7245F1CA9C224CAA5AF660 /* Dictalume */,
+				7A471FCAAEF0402F0A0B3168 /* DictalumeKeyboard */,
 			);
-			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EEA962F197A3A27DD18396BB /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CEA7094A6C5412F6D5EC2740 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		FA7245F1CA9C224CAA5AF660 /* Dictalume */ = {
+			isa = PBXGroup;
+			children = (
+				6ED195AA2263C758A2D0E408 /* AppModel.swift */,
+				0B4A3AC5E3AC8D4C3FF42C35 /* AudioRecorder.swift */,
+				6976E9AD5691A2330D3A9320 /* AutomaticTitle.swift */,
+				3347452FA692E0CA1BE13A5A /* DictalumeApp.swift */,
+				9DF0B0CBC7A3157777BCEEF2 /* HistoryView.swift */,
+				B7C5F816325B8E54AEC1251B /* KeychainStore.swift */,
+				CB05DCC2CADE38DADC3B39BD /* MeetingChatView.swift */,
+				AD114FBCF2AEF15CBC19F73F /* RecorderView.swift */,
+				B8697342942A7C2AF51B417A /* RecordingShortcuts.swift */,
+				AA90D0FABB9ABDB35ED0C3AF /* SettingsView.swift */,
+				2A9D5AFA3BCD868471150B66 /* SharedContextStore.swift */,
+				EBDDCFBF2012155014C96018 /* ShortcutSetupView.swift */,
+				3382E6C8B97675A64266C0C1 /* SpellingMemory.swift */,
+				D36088BF4918E05860B4E036 /* TranscriptionService.swift */,
+				0BE97D4376800F0D9B7C9451 /* UpcomingMeetings.swift */,
+				CEB73549BB0A809B25AD1E43 /* UpcomingMeetingsView.swift */,
+				3ACA794230AD19EF3F2D8A08 /* Info.plist */,
+				B1AB0B7DEE86BF47B8DEF2CE /* Dictalume.entitlements */,
+			);
+			name = Dictalume;
+			path = Dictalume;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		036C40FCF2AFF534B68E5977 /* Dictalume */ = {
+		3D4EF1C64C0D45D83359328B /* DictalumeKeyboard */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 202EDEAA8B1E26E595F6643E /* Build configuration list for PBXNativeTarget "Dictalume" */;
+			buildConfigurationList = 107DC333AD4EEAD47D0E04D4 /* Build configuration list for PBXNativeTarget "DictalumeKeyboard" */;
 			buildPhases = (
-				D08EFD1D16C2BF0D51FB46DA /* Sources */,
-				8154ACBABBB799CDBE93F904 /* Frameworks */,
-				D8E79C6FF1F6EC960BED536A /* Resources */,
-				2AF477DDC67E4ECB8AE84503 /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3C945663E9DB95CD807DFC35 /* PBXTargetDependency */,
-			);
-			name = Dictalume;
-			productName = Dictalume;
-			productReference = C44650454AAC59CAA2D0A2B7 /* Dictalume.app */;
-			productType = "com.apple.product-type.application";
-		};
-		85E8EDC7731A42B00248A8AD /* DictalumeKeyboard */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 74997308B74E8F2AE71F002A /* Build configuration list for PBXNativeTarget "DictalumeKeyboard" */;
-			buildPhases = (
-				5A5E686F724979C00A404BE3 /* Sources */,
-				163EE787745518AC23BBA473 /* Frameworks */,
-				ADD45C43DD55B33EFCA5238C /* Resources */,
+				98CBA84F3542AF7B6B98EC0A /* Sources */,
+				89389A718B32E30818705BC6 /* Frameworks */,
+				8FCEFE20131ADF42820F0454 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -190,19 +189,38 @@
 			);
 			name = DictalumeKeyboard;
 			productName = DictalumeKeyboard;
-			productReference = A4A8D9B1E569F96E6D10403E /* DictalumeKeyboard.appex */;
+			productReference = CEAC4AF3BD818FAD45258A70 /* DictalumeKeyboard.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		3DBCD62E45277027D8C39210 /* Dictalume */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 72005E3F4E03E983A8845FC4 /* Build configuration list for PBXNativeTarget "Dictalume" */;
+			buildPhases = (
+				0991B489C4B63E9D6D2E4F54 /* Sources */,
+				C57349749F52299CA5C07D65 /* Frameworks */,
+				F8E222AE331C938230E12D41 /* Resources */,
+				DEFB2A3C44BB868BFC0E2CC4 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				869FD646E0B3D548436D5982 /* PBXTargetDependency */,
+			);
+			name = Dictalume;
+			productName = Dictalume;
+			productReference = 6D11573FD7696BF1EE7F8ED5 /* Dictalume.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		099EE392D217F63A351C810D /* Project object */ = {
+		A8CB49D88680F4F77C9B957A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 			};
-			buildConfigurationList = 83FE254D2EE225B50CB5B45E /* Build configuration list for PBXProject "Dictalume" */;
+			buildConfigurationList = 657DB6840E8DA5487165F6F4 /* Build configuration list for PBXProject "Dictalume" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -210,28 +228,28 @@
 				en,
 				Base,
 			);
-			mainGroup = 8C0CFBC1F9B7C5D5786E405C;
+			mainGroup = A08FCB55AA3ED73E6872A077;
 			minimizedProjectReferenceProxies = 0;
 			preferredProjectObjectVersion = 100;
-			productRefGroup = 8AA96B359B1F233DEA892000 /* Products */;
+			productRefGroup = 2E9F096FC8B6C8CB16FA72A0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				036C40FCF2AFF534B68E5977 /* Dictalume */,
-				85E8EDC7731A42B00248A8AD /* DictalumeKeyboard */,
+				3DBCD62E45277027D8C39210 /* Dictalume */,
+				3D4EF1C64C0D45D83359328B /* DictalumeKeyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		ADD45C43DD55B33EFCA5238C /* Resources */ = {
+		8FCEFE20131ADF42820F0454 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D8E79C6FF1F6EC960BED536A /* Resources */ = {
+		F8E222AE331C938230E12D41 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -241,60 +259,50 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5A5E686F724979C00A404BE3 /* Sources */ = {
+		0991B489C4B63E9D6D2E4F54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				526D9C3D1C00DB528CBE163E /* KeyboardViewController.swift in Sources */,
+				7F568D88F3D681AF32397BA6 /* AppModel.swift in Sources */,
+				657F3C165C130801B49CA005 /* AudioRecorder.swift in Sources */,
+				1803353CD38DE3B631BB7C82 /* AutomaticTitle.swift in Sources */,
+				5EDDC30F9DE10F3806FFF310 /* DictalumeApp.swift in Sources */,
+				3AB1362F7A88340DE91A5DC3 /* HistoryView.swift in Sources */,
+				A413E7D79F916F1D3772C588 /* KeychainStore.swift in Sources */,
+				1637A93AE255E074A3654767 /* MeetingChatView.swift in Sources */,
+				0F1242FDA6F546465F499FC5 /* RecorderView.swift in Sources */,
+				CB9D716EF149B315FCF24406 /* RecordingShortcuts.swift in Sources */,
+				6D1908613EE130DBFC1532EC /* SettingsView.swift in Sources */,
+				C80E1AA956B57D4D588FCDD4 /* SharedContextStore.swift in Sources */,
+				ED7D7C6E3DC66608AA5BA0CE /* ShortcutSetupView.swift in Sources */,
+				4B21D21130B06DC6608D5CD2 /* SpellingMemory.swift in Sources */,
+				9A0BA85208D7F32C1060AE1F /* TranscriptionService.swift in Sources */,
+				9D25F2137305EED2D9B666FD /* UpcomingMeetings.swift in Sources */,
+				9B55BA1C76FED1430E5E961F /* UpcomingMeetingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D08EFD1D16C2BF0D51FB46DA /* Sources */ = {
+		98CBA84F3542AF7B6B98EC0A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AB672E46A0D484BD8ED01DE /* AppModel.swift in Sources */,
-				79809D5450DA1EF55DBDA583 /* AudioRecorder.swift in Sources */,
-				89596D86C11BE546219C62A2 /* HistoryView.swift in Sources */,
-				FA945A4F080D8F324BEC5891 /* KeychainStore.swift in Sources */,
-				426B9333F655CC8AF7311702 /* RecorderView.swift in Sources */,
-				E90F355B72A0942C78804857 /* SettingsView.swift in Sources */,
-				5F43C2FB17ED5C676AB752D7 /* SharedContextStore.swift in Sources */,
-				C9A4A3193C3B1283B96953F1 /* SpellingMemory.swift in Sources */,
-				2620BE1816DA6F4A45FD82AB /* TranscriptionService.swift in Sources */,
-				B671E3A21BD97CF354C43537 /* DictalumeApp.swift in Sources */,
+				4640F1D5A8737CC488201CB4 /* KeyboardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3C945663E9DB95CD807DFC35 /* PBXTargetDependency */ = {
+		869FD646E0B3D548436D5982 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = DictalumeKeyboard;
-			target = 85E8EDC7731A42B00248A8AD /* DictalumeKeyboard */;
-			targetProxy = 6426513A691ADE786BC21FA0 /* PBXContainerItemProxy */;
+			target = 3D4EF1C64C0D45D83359328B /* DictalumeKeyboard */;
+			targetProxy = 8E3CD3A86F68D6CF53F1938B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		03E5494C592B9B7A356AF824 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_ENTITLEMENTS = DictalumeKeyboard/DictalumeKeyboard.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = DictalumeKeyboard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dictalume.app.keyboard;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		87EE257CC668C25D72A2913D /* Release */ = {
+		09E8C5BE46E2CEB076829087 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -348,7 +356,23 @@
 			};
 			name = Release;
 		};
-		9A5471B617701DF9523D2026 /* Debug */ = {
+		8D87F5343262DEADC907C172 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = DictalumeKeyboard/DictalumeKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DictalumeKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dictalume.app.keyboard;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A4F67B0A62AA46B1861EF5C8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -363,10 +387,26 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AE729C84B7CA643210C526AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = DictalumeKeyboard/DictalumeKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = DictalumeKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dictalume.app.keyboard;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
-		AE418213DAF3D75D74B9EEBD /* Debug */ = {
+		C4C0A4615D017BDCB1825E90 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -427,7 +467,7 @@
 			};
 			name = Debug;
 		};
-		E9A36086EEF80E01F18F3D50 /* Release */ = {
+		FEEC8095AFD5B031F4C601B2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -442,56 +482,40 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		EFB566E52AEDF471C11C75AF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_ENTITLEMENTS = DictalumeKeyboard/DictalumeKeyboard.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = DictalumeKeyboard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dictalume.app.keyboard;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		202EDEAA8B1E26E595F6643E /* Build configuration list for PBXNativeTarget "Dictalume" */ = {
+		107DC333AD4EEAD47D0E04D4 /* Build configuration list for PBXNativeTarget "DictalumeKeyboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E9A36086EEF80E01F18F3D50 /* Release */,
-				9A5471B617701DF9523D2026 /* Debug */,
+				8D87F5343262DEADC907C172 /* Release */,
+				AE729C84B7CA643210C526AB /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		74997308B74E8F2AE71F002A /* Build configuration list for PBXNativeTarget "DictalumeKeyboard" */ = {
+		657DB6840E8DA5487165F6F4 /* Build configuration list for PBXProject "Dictalume" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				03E5494C592B9B7A356AF824 /* Release */,
-				EFB566E52AEDF471C11C75AF /* Debug */,
+				C4C0A4615D017BDCB1825E90 /* Debug */,
+				09E8C5BE46E2CEB076829087 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83FE254D2EE225B50CB5B45E /* Build configuration list for PBXProject "Dictalume" */ = {
+		72005E3F4E03E983A8845FC4 /* Build configuration list for PBXNativeTarget "Dictalume" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AE418213DAF3D75D74B9EEBD /* Debug */,
-				87EE257CC668C25D72A2913D /* Release */,
+				A4F67B0A62AA46B1861EF5C8 /* Release */,
+				FEEC8095AFD5B031F4C601B2 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 099EE392D217F63A351C810D /* Project object */;
+	rootObject = A8CB49D88680F4F77C9B957A /* Project object */;
 }

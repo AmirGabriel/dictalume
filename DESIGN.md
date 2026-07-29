@@ -34,7 +34,8 @@ The spacing unit is 4px, with 8, 12, 16, 24, and 32px composing most layouts. Co
 - Buttons: quiet secondary controls and one system-blue primary action per surface.
 - Inputs: system-filled fields with a visible neutral border and blue focus ring.
 - Provider rows: full-width settings rows, selected through a radio affordance rather than nested cards.
-- Recorder overlay: a 360px floating capsule with waveform, state label, elapsed time, and cancel hint.
+- Recorder overlay: a 304px floating capsule with waveform, elapsed time, and cancel control. It stays above full-screen work without stealing focus; its transparent host window has no native macOS shadow, preventing rectangular edge artifacts. If the input ends, becomes muted, changes device, suspends, or produces sustained digital zero, the status names the problem while the audio graph reconnects without discarding the recording already captured.
+- Menu bar and system tray: a compact waveform glyph keeps Dictalume available after its windows close. Its menu starts dictation, changes mode, opens the app, or quits.
 - History: chronological transcript rows with source app, mode, duration, provider, and copy action.
 - Writing memory: an ordinary grouped settings row with an editable vocabulary field; learned spellings remain visible and reversible.
 - Language overrides: optional paired shortcut fields beneath the global shortcut, kept secondary to automatic detection.
@@ -46,4 +47,4 @@ State transitions last 160–220ms and use exponential ease-out. The recording w
 
 ## Layout
 
-The main window is a compact desktop settings surface with persistent sidebar navigation and a single scrolling content region. Keep forms below 680px wide. The recorder overlay remains one-line while listening and expands vertically only for errors.
+The main window is a compact desktop settings surface with persistent sidebar navigation and a single scrolling content region. Keep forms below 680px wide. Meeting records expand into notes, transcript, and a contextual chat. The recorder overlay remains one-line while listening and expands vertically only for errors. Persistent API cost sits quietly in the bottom-right and reveals its measurement breakdown on demand.

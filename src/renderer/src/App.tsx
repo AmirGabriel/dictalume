@@ -5,11 +5,13 @@ import {
   Check,
   ChevronRight,
   Clipboard,
+  CircleDollarSign,
   Cloud,
   Clock3,
   Code2,
   Command,
   Copy,
+  Download,
   ExternalLink,
   FileAudio,
   FileText,
@@ -32,12 +34,15 @@ import {
 } from 'lucide-react'
 import { siDeepgram, siOpenai } from 'simple-icons'
 import type {
+  ApiUsageSummary,
   AppSettings,
+  CalendarEvent,
   HistoryItem,
   ModeId,
   PermissionState,
   ProviderId,
-  SyncStatus
+  SyncStatus,
+  UpdateStatus
 } from '../../shared/types'
 import { MeetingPage } from './MeetingPage'
 import { captureShortcut, formatShortcut } from './shortcuts'
@@ -106,18 +111,47 @@ function ProviderMark({
 }
 
 function Shortcut({ value }: { value: string }): React.JSX.Element {
-  const keys = value
-    .replace('CommandOrControl', '⌘')
-    .replace('Command', '⌘')
-    .replace('Shift', '⇧')
-    .replace('Alt', '⌥')
-    .split('+')
+  const keys = formatShortcut(value, isMacOS).split('  ')
   return (
     <span className="shortcut">
       {keys.map((key) => (
         <kbd key={key}>{key === 'Space' ? 'Space' : key}</kbd>
       ))}
     </span>
+  )
+}
+
+function ApiCostControl({ usage }: { usage: ApiUsageSummary | null }): React.JSX.Element {
+  const [open, setOpen] = useState(false)
+  const total = usage?.totalUsd || 0
+  const formatted = total < 1 ? total.toFixed(6) : total.toFixed(2)
+  return (
+    <div className="api-cost-control">
+      {open && (
+        <div className="api-cost-popover" role="status">
+          <strong>Tracked API usage</strong>
+          <dl>
+            <div><dt>This month</dt><dd>${(usage?.monthUsd || 0).toFixed(6)}</dd></div>
+            <div><dt>Provider-reported</dt><dd>${(usage?.exactUsd || 0).toFixed(6)}</dd></div>
+            <div><dt>Rate-calculated</dt><dd>${(usage?.estimatedUsd || 0).toFixed(6)}</dd></div>
+          </dl>
+          <p>
+            Provider-reported amounts are exact. Rate-calculated amounts use returned
+            tokens or recorded duration. {usage?.unpricedRequests || 0} request
+            {(usage?.unpricedRequests || 0) === 1 ? '' : 's'} could not be priced.
+          </p>
+        </div>
+      )}
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-label={`Tracked API cost: ${formatted} US dollars`}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <CircleDollarSign size={13} />
+        <span>API ${formatted}</span>
+      </button>
+    </div>
   )
 }
 
@@ -262,27 +296,48 @@ export function App(): React.JSX.Element {
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [permissions, setPermissions] = useState<PermissionState | null>(null)
   const [syncStatus, setSyncStatus] = useState<SyncStatus | null>(null)
+  const [usage, setUsage] = useState<ApiUsageSummary | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [selectedCalendarEvent, setSelectedCalendarEvent] =
+    useState<CalendarEvent | null>(null)
 
   const refresh = async (): Promise<void> => {
-    const [nextSettings, nextHistory, nextPermissions, nextSyncStatus] = await Promise.all([
+    const [nextSettings, nextHistory, nextPermissions, nextSyncStatus, nextUsage, platform] = await Promise.all([
       window.desktop.getSettings(),
       window.desktop.getHistory(),
       window.desktop.getPermissions(),
-      window.desktop.getSyncStatus()
+      window.desktop.getSyncStatus(),
+      window.desktop.getApiUsage(),
+      window.desktop.getPlatform()
     ])
     setSettings(nextSettings)
     setSavedSettings(structuredClone(nextSettings))
     setHistory(nextHistory)
     setPermissions(nextPermissions)
     setSyncStatus(nextSyncStatus)
+    setUsage(nextUsage)
+    document.documentElement.dataset.platform = platform
   }
 
   useEffect(() => {
     void refresh()
-    return window.desktop.onSyncStatus(setSyncStatus)
+    const unsubscribeSync = window.desktop.onSyncStatus(setSyncStatus)
+    const unsubscribeUsage = window.desktop.onApiUsageChanged(setUsage)
+    return () => {
+      unsubscribeSync()
+      unsubscribeUsage()
+    }
   }, [])
+
+  useEffect(
+    () =>
+      window.desktop.onCalendarEventSelected((event) => {
+        setSelectedCalendarEvent(event)
+        setPage('meetings')
+      }),
+    []
+  )
 
   useEffect(() => {
     if (page === 'history') {
@@ -388,7 +443,9 @@ export function App(): React.JSX.Element {
             }}
           />
         )}
-        {page === 'meetings' && <MeetingPage />}
+        {page === 'meetings' && (
+          <MeetingPage selectedCalendarEvent={selectedCalendarEvent} />
+        )}
         {page === 'modes' && (
           <ModesPage settings={settings} patchSettings={patchSettings} />
         )}
@@ -402,6 +459,7 @@ export function App(): React.JSX.Element {
           <GeneralPage settings={settings} patchSettings={patchSettings} />
         )}
       </main>
+      <ApiCostControl usage={usage} />
 
       {(dirty || saved) && (
         <div className="save-bar" role="status">
@@ -562,7 +620,7 @@ function HomePage({
               </button>
             )}
           </div>
-          <div className="permission-item">
+          {isMacOS && <div className="permission-item">
             <span className={`permission-state ${permissions?.accessibility ? 'ok' : ''}`}>
               {permissions?.accessibility ? <Check size={15} /> : <Command size={15} />}
             </span>
@@ -578,7 +636,7 @@ function HomePage({
                 Open settings <ExternalLink size={13} />
               </button>
             )}
-          </div>
+          </div>}
         </div>
       </section>
     </div>
@@ -621,6 +679,7 @@ function HistoryPage({
                 <span>{item.provider}</span>
                 <span>{item.mode}</span>
               </div>
+              <h3 className="history-title">{item.title || 'Untitled transcript'}</h3>
               <p>{item.text}</p>
               {item.rawText !== item.text && (
                 <details className="raw-transcript">
@@ -737,7 +796,7 @@ function ModesPage({
           <div className="form-heading">
             <div>
               <h2>{mode.name}</h2>
-              <p>Edit the cleanup instruction used after transcription.</p>
+              <p>Choose formatting within Dictalume’s preserve-meaning rules.</p>
             </div>
             <Toggle
               label="Enable AI cleanup"
@@ -780,6 +839,10 @@ function ModesPage({
               value={mode.prompt}
               onChange={(event) => patchMode({ prompt: event.target.value })}
             />
+            <small>
+              Always enforced: clean grammar, remove filler or repetition, and follow explicit
+              self-edits—without summarizing, adding, or removing information.
+            </small>
           </label>
           <fieldset className="context-fieldset" disabled={!mode.cleanup}>
             <legend>Context awareness</legend>
@@ -832,7 +895,7 @@ function ModesPage({
             />
           </label>
           <p className="field-help">
-            Comma-separated macOS app names. This mode becomes active when recording starts there.
+            Comma-separated {isMacOS ? 'Mac app' : 'Windows application'} names. This mode becomes active when recording starts there.
           </p>
           <p className="field-help">
             The original transcript is always preserved in History.
@@ -1081,7 +1144,7 @@ function SyncPage({
       <section className="section-block">
         <p className="security-note">
           <ShieldCheck size={15} />
-          API keys stay in macOS Keychain or Windows DPAPI and are never written to the shared folder.
+          API keys stay in {isMacOS ? 'macOS Keychain' : 'Windows DPAPI'} and are never written to the shared folder.
           Configure each key once on each computer; everything it operates on stays synchronized.
         </p>
       </section>
@@ -1107,12 +1170,50 @@ function GeneralPage({
       }
     })
   }
+  const [updateStatus, setUpdateStatus] = useState<UpdateStatus | null>(null)
+
+  useEffect(() => {
+    void window.desktop.getUpdateStatus().then(setUpdateStatus)
+    return window.desktop.onUpdateStatus(setUpdateStatus)
+  }, [])
+
+  const updateAction = async (): Promise<void> => {
+    if (!updateStatus) return
+    if (updateStatus.state === 'ready') {
+      await window.desktop.installUpdate()
+      return
+    }
+    if (updateStatus.state === 'manual' || updateStatus.state === 'error') {
+      await window.desktop.openUpdateDownload()
+      return
+    }
+    if (updateStatus.state === 'available') {
+      setUpdateStatus(await window.desktop.downloadUpdate())
+      return
+    }
+    setUpdateStatus(await window.desktop.checkForUpdates())
+  }
+
+  const updateButtonLabel =
+    updateStatus?.state === 'ready'
+      ? 'Restart and install'
+      : updateStatus?.state === 'available'
+        ? 'Download update'
+        : updateStatus?.state === 'manual' || updateStatus?.state === 'error'
+          ? 'Open download'
+          : updateStatus?.state === 'checking'
+            ? 'Checking…'
+            : updateStatus?.state === 'downloading'
+              ? `Downloading ${Math.round(updateStatus.progress)}%`
+              : updateStatus?.state === 'current'
+                ? 'Check again'
+                : 'Check for updates'
 
   return (
     <div className="page form-page">
       <PageHeader title="General" description="Tune Dictalume to the way you work." />
       <section className="section-block">
-        <div className="section-heading"><div><h2>Shortcut</h2><p>Works while Dictalume is running in the menu bar.</p></div></div>
+        <div className="section-heading"><div><h2>Shortcut</h2><p>Works while Dictalume is running in the {isMacOS ? 'menu bar' : 'system tray'}.</p></div></div>
         <ShortcutRecorder
           label="Global shortcut"
           value={settings.shortcut}
@@ -1268,6 +1369,73 @@ function GeneralPage({
             <Toggle label="Launch at login" checked={settings.launchAtLogin} onChange={(launchAtLogin) => patchSettings({ launchAtLogin })} />
           </div>
         </div>
+      </section>
+      <section className="section-block software-update-section">
+        <div className="section-heading">
+          <div>
+            <h2>Software update</h2>
+            <p>Install new versions without setting up Dictalume again.</p>
+          </div>
+          <span className="row-value">v{updateStatus?.currentVersion || '—'}</span>
+        </div>
+        <div className="software-update-row">
+          <span
+            className={`row-icon ${
+              updateStatus?.state === 'ready' ? 'update-ready' : ''
+            }`}
+          >
+            {updateStatus?.state === 'available' ||
+            updateStatus?.state === 'downloading' ? (
+              <Download size={17} />
+            ) : (
+              <RefreshCw
+                className={
+                  updateStatus?.state === 'checking' ? 'spin' : ''
+                }
+                size={17}
+              />
+            )}
+          </span>
+          <span className="row-main">
+            <strong>
+              {updateStatus?.availableVersion
+                ? `Dictalume ${updateStatus.availableVersion}`
+                : 'Keep Dictalume up to date'}
+            </strong>
+            <small>
+              {updateStatus?.message || 'Check GitHub for a newer version.'}
+            </small>
+            {updateStatus?.state === 'downloading' && (
+              <span
+                className="update-progress"
+                role="progressbar"
+                aria-label="Update download"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(updateStatus.progress)}
+              >
+                <span style={{ width: `${updateStatus.progress}%` }} />
+              </span>
+            )}
+          </span>
+          <button
+            className="secondary-button compact"
+            disabled={
+              !updateStatus ||
+              updateStatus.state === 'checking' ||
+              updateStatus.state === 'downloading'
+            }
+            onClick={() => void updateAction()}
+          >
+            {updateButtonLabel}
+          </button>
+        </div>
+        {isMacOS && updateStatus?.state === 'error' && (
+          <p className="field-help">
+            Until the Mac build has an Apple signing certificate, macOS may require
+            replacing the app from the downloaded DMG.
+          </p>
+        )}
       </section>
     </div>
   )

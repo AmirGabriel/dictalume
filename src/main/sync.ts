@@ -1,7 +1,8 @@
 import { app } from 'electron'
-import { copyFile, mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import type {
+  ApiUsageEvent,
   AppSettings,
   HistoryItem,
   MeetingRecord,
@@ -23,6 +24,7 @@ export interface SharedContext {
   settings: SyncedSettings
   history: HistoryItem[]
   meetings: MeetingRecord[]
+  usage?: ApiUsageEvent[]
 }
 
 interface SyncPreferences {
@@ -40,6 +42,8 @@ export interface SyncStore {
   replaceHistory(history: HistoryItem[], notify?: boolean): Promise<void>
   getMeetings(): Promise<MeetingRecord[]>
   replaceMeetings(meetings: MeetingRecord[], notify?: boolean): Promise<void>
+  getUsageEvents?(): Promise<ApiUsageEvent[]>
+  replaceUsage?(events: ApiUsageEvent[], notify?: boolean): Promise<void>
   getLocalUpdatedAt(): Promise<number>
 }
 
@@ -105,6 +109,7 @@ export function mergeSharedContexts(
       ...loser.settings.modes,
       ...winner.settings.modes
     },
+    meetingSpaces: winner.settings.meetingSpaces || loser.settings.meetingSpaces || [],
     vocabulary: mergeVocabulary(
       local.settings.vocabulary,
       remote.settings.vocabulary
@@ -114,7 +119,16 @@ export function mergeSharedContexts(
   for (const item of [...remote.history, ...local.history]) history.set(item.id, item)
   const meetings = new Map<string, MeetingRecord>()
   for (const item of [...(remote.meetings || []), ...(local.meetings || [])]) {
-    meetings.set(item.id, item)
+    const existing = meetings.get(item.id)
+    const itemChangedAt = item.updatedAt || item.createdAt
+    const existingChangedAt = existing
+      ? existing.updatedAt || existing.createdAt
+      : Number.NEGATIVE_INFINITY
+    if (!existing || itemChangedAt >= existingChangedAt) meetings.set(item.id, item)
+  }
+  const usage = new Map<string, ApiUsageEvent>()
+  for (const item of [...(remote.usage || []), ...(local.usage || [])]) {
+    usage.set(item.id, item)
   }
 
   return {
@@ -128,7 +142,10 @@ export function mergeSharedContexts(
       .slice(0, 250),
     meetings: [...meetings.values()]
       .sort((a, b) => b.createdAt - a.createdAt)
-      .slice(0, 100)
+      .slice(0, 100),
+    usage: [...usage.values()]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 2_000)
   }
 }
 
@@ -232,8 +249,8 @@ export class SyncManager {
       const localSettings = await this.store.getSettings()
       const localHistory = await this.store.getHistory()
       const localMeetings = await this.store.getMeetings()
+      const localUsage = await this.store.getUsageEvents?.() || []
       const localUpdatedAt = await this.store.getLocalUpdatedAt()
-      const remote = await this.readSharedContext()
       const local: SharedContext = {
         version: 1,
         revision: crypto.randomUUID(),
@@ -241,9 +258,12 @@ export class SyncManager {
         deviceId: this.preferences.deviceId,
         settings: stripSecrets(localSettings),
         history: localHistory,
-        meetings: localMeetings
+        meetings: localMeetings,
+        usage: localUsage
       }
       const localChanged = localUpdatedAt > this.preferences.lastSyncedAt
+      if (localChanged) await this.writeDeviceContext(local)
+      const remote = await this.readSharedContext()
       const remoteChanged = Boolean(
         remote && remote.revision !== this.preferences.lastRevision
       )
@@ -255,6 +275,7 @@ export class SyncManager {
         await this.store.saveSettings(restored, false)
         await this.store.replaceHistory(remote.history)
         await this.store.replaceMeetings(remote.meetings || [])
+        await this.store.replaceUsage?.(remote.usage || [])
         this.onContextApplied(restored)
       } else if (remote && remoteChanged && localChanged) {
         context = mergeSharedContexts(local, remote)
@@ -262,6 +283,7 @@ export class SyncManager {
         await this.store.saveSettings(restored, false)
         await this.store.replaceHistory(context.history)
         await this.store.replaceMeetings(context.meetings || [])
+        await this.store.replaceUsage?.(context.usage || [])
         await this.writeSharedContext(context)
         this.onContextApplied(restored)
       } else if (!remote || localChanged) {
@@ -301,27 +323,72 @@ export class SyncManager {
     return join(this.preferences.folderPath, 'WhisperType', 'context.json')
   }
 
+  private devicesPath(): string {
+    return join(this.preferences.folderPath, 'Dictalume', 'devices')
+  }
+
+  private devicePath(): string {
+    const safeDeviceId = this.preferences.deviceId.replace(/[^a-zA-Z0-9_-]/g, '')
+    return join(this.devicesPath(), `${safeDeviceId}.json`)
+  }
+
   private async readSharedContext(): Promise<SharedContext | null> {
+    const contexts: SharedContext[] = []
     try {
       const parsed = JSON.parse(
         await readFile(this.sharedPath(), 'utf8')
       ) as SharedContext
-      return parsed.version === 1 ? { ...parsed, meetings: parsed.meetings || [] } : null
+      if (parsed.version === 1) contexts.push(this.normalizeContext(parsed))
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         try {
           const legacy = JSON.parse(
             await readFile(this.legacySharedPath(), 'utf8')
           ) as SharedContext
-          return legacy.version === 1
-            ? { ...legacy, meetings: legacy.meetings || [] }
-            : null
+          if (legacy.version === 1) contexts.push(this.normalizeContext(legacy))
         } catch (legacyError) {
-          if ((legacyError as NodeJS.ErrnoException).code === 'ENOENT') return null
-          throw legacyError
+          if ((legacyError as NodeJS.ErrnoException).code !== 'ENOENT') throw legacyError
         }
+      } else {
+        throw error
       }
-      throw error
+    }
+
+    try {
+      const entries = (await readdir(this.devicesPath(), { withFileTypes: true }))
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+        .slice(0, 50)
+      const replicas = await Promise.all(
+        entries.map(async (entry) => {
+          try {
+            const parsed = JSON.parse(
+              await readFile(join(this.devicesPath(), entry.name), 'utf8')
+            ) as SharedContext
+            return parsed.version === 1 ? this.normalizeContext(parsed) : null
+          } catch {
+            // A cloud drive can expose a placeholder or an in-flight file briefly.
+            // The aggregate context remains usable and the next poll retries it.
+            return null
+          }
+        })
+      )
+      contexts.push(...replicas.filter((value): value is SharedContext => Boolean(value)))
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    }
+
+    if (contexts.length === 0) return null
+    const revisions = [...new Set(contexts.map((context) => context.revision))].sort()
+    const ordered = [...contexts].sort((a, b) => a.updatedAt - b.updatedAt)
+    let merged = ordered[0]
+    for (const context of ordered.slice(1)) {
+      const previousUpdatedAt = merged.updatedAt
+      merged = mergeSharedContexts(merged, context)
+      merged.updatedAt = Math.max(previousUpdatedAt, context.updatedAt)
+    }
+    return {
+      ...merged,
+      revision: revisions.join('|')
     }
   }
 
@@ -334,6 +401,24 @@ export class SyncManager {
     await writeFile(temp, JSON.stringify(context, null, 2), 'utf8')
     await copyFile(temp, target)
     await unlink(temp).catch(() => undefined)
+  }
+
+  private async writeDeviceContext(context: SharedContext): Promise<void> {
+    const target = this.devicePath()
+    const temp = `${target}.tmp`
+    await mkdir(this.devicesPath(), { recursive: true })
+    await writeFile(temp, JSON.stringify(context, null, 2), 'utf8')
+    await copyFile(temp, target)
+    await unlink(temp).catch(() => undefined)
+  }
+
+  private normalizeContext(context: SharedContext): SharedContext {
+    return {
+      ...context,
+      history: context.history || [],
+      meetings: context.meetings || [],
+      usage: context.usage || []
+    }
   }
 
   private async readPreferences(): Promise<SyncPreferences> {

@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Dictalume Speaker Tags",
+  "version": "0.4.0",
+  "description": "Reads Google Meet's visible active-speaker name and sends it only to Dictalume on this computer.",
+  "permissions": [],
+  "host_permissions": [
+    "https://meet.google.com/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src ws://127.0.0.1:43127"
+  }
+}

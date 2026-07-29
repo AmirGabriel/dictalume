@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "036C40FCF2AFF534B68E5977"
+               BlueprintIdentifier = "3DBCD62E45277027D8C39210"
                BuildableName = "Dictalume.app"
                BlueprintName = "Dictalume"
                ReferencedContainer = "container:Dictalume.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "85E8EDC7731A42B00248A8AD"
+               BlueprintIdentifier = "3D4EF1C64C0D45D83359328B"
                BuildableName = "DictalumeKeyboard.appex"
                BlueprintName = "DictalumeKeyboard"
                ReferencedContainer = "container:Dictalume.xcodeproj">
@@ -44,7 +44,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "036C40FCF2AFF534B68E5977"
+            BlueprintIdentifier = "3DBCD62E45277027D8C39210"
             BuildableName = "Dictalume.app"
             BlueprintName = "Dictalume"
             ReferencedContainer = "container:Dictalume.xcodeproj">
@@ -67,7 +67,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "036C40FCF2AFF534B68E5977"
+            BlueprintIdentifier = "3DBCD62E45277027D8C39210"
             BuildableName = "Dictalume.app"
             BlueprintName = "Dictalume"
             ReferencedContainer = "container:Dictalume.xcodeproj">
@@ -84,7 +84,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "036C40FCF2AFF534B68E5977"
+            BlueprintIdentifier = "3DBCD62E45277027D8C39210"
             BuildableName = "Dictalume.app"
             BlueprintName = "Dictalume"
             ReferencedContainer = "container:Dictalume.xcodeproj">
